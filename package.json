@@ -1,6 +1,6 @@
 {
   "name": "oxapay",
-  "version": "0.0.2",
+  "version": "0.5.0",
   "description": "An easy way to integrate with the oxapay api system.",
   "main": "main.js",
   "scripts": {
@@ -20,5 +20,14 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^1.5.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OfficialCodinary/Oxapay.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OfficialCodinary/Oxapay/issues"
+  },
+  "homepage": "https://github.com/OfficialCodinary/Oxapay#readme"
 }
