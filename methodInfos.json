@@ -18,6 +18,15 @@
                 "additionalProperties": false
             }
         },
+        "cryptoPrices": {
+            "path": "api/prices",
+            "schema": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": false
+            }
+        },
         "systemStatus": {
             "path": "monitor",
             "schema": {
@@ -341,6 +350,19 @@
                 "properties": {
                     "currency": {
                         "type": "string"
+                    }
+                },
+                "required": [],
+                "additionalProperties": false
+            }
+        },
+        "payoutInquiry": {
+            "path": "api/balance",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "currency": {
+                        "trackId": "number"
                     }
                 },
                 "required": [],

@@ -39,6 +39,16 @@ class ClientGeneral {
     }
 
     /**
+    * Retrieve cryptocurrency prices.
+    *
+    * @returns {Promise<object>} - A promise that resolves with cryptocurrency price data.
+    * @throws {Error} - If there's an error during the API call.
+    */
+    async cryptoPrices() {
+        return this.#request('cryptoPrices');
+    }
+    
+    /**
     * Returns the status of the oxapay server.
     * @returns {Promise<object>} - A promise that resolves with the API response data.
     * @throws {Error} - If there's an error during the API call.
@@ -293,6 +303,20 @@ class ClientPayout {
 
     async accountBalance(reqData) {
         return this.#request('accountBalance', reqData);
+    }
+    
+    /**
+    * Inquire about a payout using a specific currency and track ID.
+    *
+    * @param {object} requestData - The request data for payout inquiry.
+    * @param {string} requestData.currency - The currency for the payout inquiry (type: string).
+    * @param {number} requestData.trackId - The track ID associated with the payout (type: number).
+    * @returns {Promise<object>} - A promise that resolves with the payout inquiry response data.
+    * @throws {Error} - If there's an error during the API call.
+    */
+
+    async payoutInquiry(reqData) {
+        return this.#request('payoutInquiry', reqData);
     }
 }
 

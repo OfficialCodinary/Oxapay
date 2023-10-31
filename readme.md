@@ -13,6 +13,7 @@ Oxapay is a Node.js library for interacting with the Oxapay Merchant API. This d
     - [ClientGeneral Methods](#clientgeneral-methods)
       - [`supportedNetworks()`](#supportednetworks)
       - [`supportedCurrencies()`](#supportedcurrencies)
+      - [`cryptoPrices()`](#cryptoPrices)
       - [`systemStatus()`](#systemstatus)
     - [ClientMerchant Methods](#clientmerchant-methods)
       - [`allowedCoins()`](#allowedcoins)
@@ -27,6 +28,7 @@ Oxapay is a Node.js library for interacting with the Oxapay Merchant API. This d
       - [`createPayout(reqData)`](#createpayout)
       - [`payoutHistory(reqData)`](#payouthistory)
       - [`accountBalance(reqData)`](#accountbalance)
+      - [`payoutInquiry(reqData)`](#payoutInquiry)
   - [Credits](#credits)
   - [Contributions](#contributions)
 
@@ -105,6 +107,26 @@ client.supportedCurrencies()
   })
   .catch((error) => {
     console.error('Error fetching supported currencies:', error.message);
+  });
+```
+
+#### `cryptoPrices()`
+
+**Description:** Retrieves payout information using a track ID.
+
+**Example:**
+
+```javascript
+const { General } = require('oxapay');
+
+const client = new General();
+
+client.cryptoPrices()
+  .then((response) => {
+    console.log('CryptoCurrency\'s prices:', response);
+  })
+  .catch((error) => {
+    console.error('Error fetching prices:', error.message);
   });
 ```
 
@@ -553,6 +575,37 @@ client.accountBalance(balanceData)
   })
   .catch((error) => {
     console.error('Error fetching account balance:', error.message);
+  });
+```
+
+#### `payoutInquiry(reqData)`
+
+**Description:** Retrieves payout information using a track ID.
+
+**Parameters:**
+
+- `reqData` (Object): The request data for retrieving payout information.
+
+   - `trackId` (Number): The track ID associated with the payout.
+
+**Example:**
+
+```javascript
+const { Merchant } = require('oxapay');
+
+const apiKey = 'sandbox';
+const client = new Merchant(apiKey);
+
+const payoutInquiryData = {
+  trackId: 987654,
+};
+
+client.payoutInquiry(payoutInquiryData)
+  .then((response) => {
+    console.log('Payout information:', response);
+  })
+  .catch((error) => {
+    console.error('Error fetching payout information:', error.message);
   });
 ```
 
