@@ -2,6 +2,7 @@ const axios = require("axios");
 const Ajv = require('ajv');
 const ajv = new Ajv({})
 const fs = require("fs")
+const path = require('path');
 
 /**
  * A class representing a client for interacting with the Oxapay Merchant API.
@@ -9,7 +10,7 @@ const fs = require("fs")
 class ClientGeneral {
 
     #apiBaseURL = "https://api.oxapay.com/";
-    #methods = JSON.parse(fs.readFileSync("./methodInfos.json")).General
+    #methods = JSON.parse(fs.readFileSync(path.join(__dirname, 'methodInfos.json'))).General
 
     async #request(method) {
         try {
@@ -65,7 +66,7 @@ class ClientMerchant {
     * @param {string} apiKey - The API key for authentication.
     */
     #apiBaseURL = "https://api.oxapay.com/";
-    #methods = JSON.parse(fs.readFileSync("./methodInfos.json")).Merchant
+    #methods = JSON.parse(fs.readFileSync(path.join(__dirname, 'methodInfos.json'))).Merchant
     #apiKey;
     constructor(apiKey) {
         this.#apiKey = apiKey;
@@ -226,7 +227,7 @@ class ClientMerchant {
 
 class ClientPayout {
     #apiBaseURL = "https://api.oxapay.com/";
-    #methods = JSON.parse(fs.readFileSync("./methodInfos.json")).Payout
+    #methods = JSON.parse(fs.readFileSync(path.join(__dirname, 'methodInfos.json'))).Payout
     #apiKey;
     constructor(apiKey) {
         this.#apiKey = apiKey;
