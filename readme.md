@@ -1,5 +1,3 @@
-
-
 # **Oxapay Documentation**
 
 Oxapay is a Node.js library for interacting with the Oxapay Merchant API. This documentation provides comprehensive information on how to install, use, and contribute to this library.
