@@ -357,7 +357,7 @@
             }
         },
         "payoutInquiry": {
-            "path": "api/balance",
+            "path": "api/inquiry",
             "schema": {
                 "type": "object",
                 "properties": {
