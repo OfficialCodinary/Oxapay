@@ -362,7 +362,7 @@
                 "type": "object",
                 "properties": {
                     "trackId": {
-                        "type": "number"
+                        "type": "integer"
                     }
                 },
                 "required": [],
