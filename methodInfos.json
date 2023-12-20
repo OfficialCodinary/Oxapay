@@ -357,12 +357,12 @@
             }
         },
         "payoutInquiry": {
-            "path": "api/balance",
+            "path": "api/inquiry",
             "schema": {
                 "type": "object",
                 "properties": {
-                    "currency": {
-                        "trackId": "number"
+                    "trackId": {
+                        "type": "integer"
                     }
                 },
                 "required": [],
