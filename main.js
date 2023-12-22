@@ -1,6 +1,6 @@
 const axios = require("axios");
 const Ajv = require('ajv');
-const ajv = new Ajv({})
+const ajv = new Ajv({ allErrors: true })
 const fs = require("fs")
 const path = require('path');
 
@@ -77,7 +77,7 @@ class ClientMerchant {
             if (reqData) {
                 var validator = ajv.compile(this.#methods[method].schema)
                 var valid = await validator(reqData)
-                if (!valid) throw new Error(valid.errors)
+                if (!valid) throw new Error(validator.errors)
             }
             const response = await axios.post(`${this.#apiBaseURL}${this.#methods[method].path}`, {
                 merchant: this.#apiKey,
@@ -236,7 +236,7 @@ class ClientPayout {
             if (reqData) {
                 var validator = ajv.compile(this.#methods[method].schema)
                 var valid = await validator(reqData)
-                if (!valid) throw new Error(valid.errors)
+                if (!valid) throw new Error(validator.errors)
             }
             const response = await axios.post(`${this.#apiBaseURL}${this.#methods[method].path}`, {
                 key: this.#apiKey,
@@ -258,7 +258,7 @@ class ClientPayout {
     * @param {string} reqData.callbackUrl - The URL for callback notifications (type: string).
     * @param {string} reqData.description - Description of the payout (type: string).
     * @returns {Promise<object>} - A promise that resolves with the payout transaction response data.
-    * @throws {Error} - If there's an error during the API call.
+    * @throws {Error} - If there's an error during the API call/parameters.
     */
 
     async createPayout(reqData = {}) {
