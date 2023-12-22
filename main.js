@@ -76,10 +76,8 @@ class ClientMerchant {
         try {
             if (reqData) {
                 var validator = ajv.compile(this.#methods[method].schema)
-                if (!(await validator(reqData))) {
-                    console.log('ERROR: Invalid data!');
-                    return
-                }
+                var valid = await validator(reqData)
+                if (!valid) throw new Error(valid.errors)
             }
             const response = await axios.post(`${this.#apiBaseURL}${this.#methods[method].path}`, {
                 merchant: this.#apiKey,
@@ -237,10 +235,8 @@ class ClientPayout {
         try {
             if (reqData) {
                 var validator = ajv.compile(this.#methods[method].schema)
-                if (!(await validator(reqData))) {
-                    console.log('ERROR: Invalid data!');
-                    return
-                }
+                var valid = await validator(reqData)
+                if (!valid) throw new Error(valid.errors)
             }
             const response = await axios.post(`${this.#apiBaseURL}${this.#methods[method].path}`, {
                 key: this.#apiKey,
