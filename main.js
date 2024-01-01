@@ -242,7 +242,7 @@ class ClientPayout {
             if (reqData) {
                 var validator = ajv.compile(this.#methods[method].schema)
                 var valid = await validator(reqData)
-                if (!valid) throw new Error(validator.errors)
+                if (!valid) throw new Error(JSON.stringify(validator.errors,null,2))
             }
             const response = await axios.post(`${this.#apiBaseURL}${this.#methods[method].path}`, {
                 key: this.#apiKey,
