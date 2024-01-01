@@ -68,8 +68,10 @@ class ClientMerchant {
     #apiBaseURL = "https://api.oxapay.com/";
     #methods = JSON.parse(fs.readFileSync(path.join(__dirname, 'methodInfos.json'))).Merchant
     #apiKey;
-    constructor(apiKey) {
+    #isDebug;
+    constructor(apiKey,debugLogger = false) {
         this.#apiKey = apiKey;
+        this.#isDebug = debugLogger;
     }
 
     async #request(method, reqData) {
@@ -77,12 +79,14 @@ class ClientMerchant {
             if (reqData) {
                 var validator = ajv.compile(this.#methods[method].schema)
                 var valid = await validator(reqData)
-                if (!valid) throw new Error(validator.errors)
+                if (!valid) throw new Error(JSON.stringify(validator.errors,null,2))
+
             }
             const response = await axios.post(`${this.#apiBaseURL}${this.#methods[method].path}`, {
                 merchant: this.#apiKey,
                 ...reqData,
             });
+            if(this.#isDebug) console.log(response)
             return response.data;
         } catch (err) {
             throw new Error(err.message);
@@ -227,8 +231,10 @@ class ClientPayout {
     #apiBaseURL = "https://api.oxapay.com/";
     #methods = JSON.parse(fs.readFileSync(path.join(__dirname, 'methodInfos.json'))).Payout
     #apiKey;
-    constructor(apiKey) {
+    #isDebug;
+    constructor(apiKey, debugLogger = false) {
         this.#apiKey = apiKey;
+        this.#isDebug = debugLogger;
     }
 
     async #request(method, reqData) {
@@ -242,6 +248,7 @@ class ClientPayout {
                 key: this.#apiKey,
                 ...reqData,
             });
+            if(this.#isDebug) console.log(response)
             return response.data;
         } catch (err) {
             throw new Error(err.message);
