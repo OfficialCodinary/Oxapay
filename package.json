@@ -1,6 +1,6 @@
 {
   "name": "oxapay",
-  "version": "0.6.8",
+  "version": "0.6.10",
   "description": "An easy to use nodejs package to integrate your project with oxapay",
   "main": "main.js",
   "scripts": {
