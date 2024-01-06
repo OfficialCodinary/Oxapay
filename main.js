@@ -127,13 +127,13 @@ class ClientMerchant {
     * It returns a detailed information of the invoice
     * @param {object} reqData - The request data for the API call.
     * @param {integer} reqData.amount - Amount to be requested in the invoice (type: integer).
+    * @param {string} reqData.network - Network of the request amount (type: string).
     * @param {string} reqData.currency - Currency of the request amount (type: string).
     * @param {string} reqData.payCurrency - Currency for payment (type: string).
     * @param {integer} reqData.lifeTime - Lifetime or duration of the invoice (type: integer).
     * @param {float} reqData.feePaidByPayer - Fee paid by the payer (type: float).
     * @param {float} reqData.underPaidCover - Underpaid coverage (type: float).
     * @param {string} reqData.callbackUrl - URL for callback notifications (type: string).
-    * @param {string} reqData.returnUrl - URL for redirection after completion (type: string).
     * @param {string} reqData.description - Description of the invoice (type: string).
     * @param {string} reqData.orderId - Order identifier (type: string).
     * @param {string} reqData.email - Email address (type: string).
