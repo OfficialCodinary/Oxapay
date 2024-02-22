@@ -150,7 +150,7 @@ class ClientMerchant {
     *
     * @param {object} reqData - The request data for creating a static address.
     * @param {string} reqData.currency - The currency used for the static address (type: string).
-    * @param {string} reqData.Network - The name or identifier of the network (type: string).
+    * @param {string} reqData.network - The name or identifier of the network (type: string).
     * @param {string} reqData.callbackUrl - The URL for callback notifications (type: string).
     * @returns {Promise<object>} - A promise that resolves with the API response data.
     * @throws {Error} - If there's an error during the API call.
