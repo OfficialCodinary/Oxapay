@@ -151,7 +151,7 @@ class ClientMerchant {
     * @param {object} reqData - The request data for creating a static address.
     * @param {string} reqData.currency - The currency used for the static address (type: string).
     * @param {string} reqData.Network - The name or identifier of the network (type: string).
-    * @param {string} requData.callbackUrl - The URL for callback notifications (type: string).
+    * @param {string} reqData.callbackUrl - The URL for callback notifications (type: string).
     * @returns {Promise<object>} - A promise that resolves with the API response data.
     * @throws {Error} - If there's an error during the API call.
     */
@@ -312,9 +312,9 @@ class ClientPayout {
     /**
     * Inquire about a payout using a specific currency and track ID.
     *
-    * @param {object} requestData - The request data for payout inquiry.
-    * @param {string} requestData.currency - The currency for the payout inquiry (type: string).
-    * @param {number} requestData.trackId - The track ID associated with the payout (type: number).
+    * @param {object} reqData - The request data for payout inquiry.
+    * @param {string} reqData.currency - The currency for the payout inquiry (type: string).
+    * @param {number} reqData.trackId - The track ID associated with the payout (type: number).
     * @returns {Promise<object>} - A promise that resolves with the payout inquiry response data.
     * @throws {Error} - If there's an error during the API call.
     */
