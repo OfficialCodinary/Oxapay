@@ -261,6 +261,7 @@ class ClientPayout {
     * @param {object} reqData - The request data for creating a payout.
     * @param {string} reqData.address - The recipient's address for the payout (type: string).
     * @param {number} reqData.amount - The amount to be paid out (type: float).
+    * @param {string} reqData.network - The network for the payout transaction (type: string).
     * @param {string} reqData.currency - The currency of the payout amount (type: string).
     * @param {string} reqData.callbackUrl - The URL for callback notifications (type: string).
     * @param {string} reqData.description - Description of the payout (type: string).
