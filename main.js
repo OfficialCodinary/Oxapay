@@ -12,9 +12,9 @@ class ClientGeneral {
     #apiBaseURL = "https://api.oxapay.com/";
     #methods = JSON.parse(fs.readFileSync(path.join(__dirname, 'methodInfos.json'))).General
 
-    async #request(method) {
+    async #request(method, reqData = {}) {
         try {
-            const response = await axios.post(`${this.#apiBaseURL}${this.#methods[method].path}`, {});
+            const response = await axios.post(`${this.#apiBaseURL}${this.#methods[method].path}`, reqData);
             return response.data;
         } catch (err) {
             throw new Error(err.message);
