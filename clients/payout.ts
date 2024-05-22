@@ -1,21 +1,43 @@
 import axios from "axios";
 import Ajv from 'ajv';
-import { readFileSync } from "fs";
+import { readFile } from "fs/promises";
 import { join } from 'path';
 const ajv = new Ajv({ allErrors: true })
 
+/**
+ * Create a new client for interacting with the Oxapay Merchant API.
+ * @param {string} apiKey - The API key for the Oxapay Merchant API.
+ * @param {boolean} debugLogger - A flag to enable/disable debug logging.
+ * @example
+ * const client = new ClientPayout('your-api-key', true);
+ * // or
+ * const client = new ClientPayout('your-api-key');
+*/
 class ClientPayout {
     private apiBaseURL = "https://api.oxapay.com/";
-    private methods = JSON.parse(readFileSync(join(__dirname, 'methodInfos.json')).toString()).Payout
-    private apiKey;
-    private isDebug;
-    constructor(apiKey, debugLogger = false) {
+    private methods: Promise<any>;
+    private apiKey: string;
+    private isDebug: boolean;
+    private initialization: Promise<any>;
+
+    constructor(apiKey: string, debugLogger = false) {
         this.apiKey = apiKey;
         this.isDebug = debugLogger;
+        if (!apiKey) throw new Error('API key is required');
+        if (typeof debugLogger !== 'boolean') throw new Error('Debug logger must be a boolean');
+
+        this.initialization = readFile(join(__dirname, 'methodInfos.json'), 'utf-8')
+            .then(data => {
+                this.methods = JSON.parse(data).Payout
+            })
+            .catch(err => {
+                throw new Error(err.message)
+            });
     }
 
     private async request(method: 'createPayout' | 'payoutHistory' | 'accountBalance' | 'payoutInquiry', reqData?: object) {
         try {
+            await this.initialization;
             if (reqData) {
                 var validator = ajv.compile(this.methods[method].schema)
                 var valid = await validator(reqData)

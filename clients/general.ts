@@ -1,6 +1,6 @@
 import axios from "axios";
 import Ajv from 'ajv';
-import { readFileSync } from "fs";
+import { readFile } from "fs/promises";
 import { join } from 'path';
 const ajv = new Ajv({ allErrors: true })
 
@@ -10,10 +10,25 @@ const ajv = new Ajv({ allErrors: true })
 class ClientGeneral {
 
     private apiBaseURL = "https://api.oxapay.com/";
-    private methods = JSON.parse(readFileSync(join(__dirname, 'methodInfos.json')).toString()).General
+    private methods: Promise<any>;
+    private initialization: Promise<any>;
+
+    constructor() {
+        this.initialization = readFile(join(__dirname, 'methodInfos.json'), 'utf-8')
+            .then(data => {
+                this.methods = JSON.parse(data).General
+            })
+            .catch(err => { throw new Error(err.message) });
+    }
 
     private async request(method: 'supportedNetworks' | 'supportedCurrencies' | 'supportedFiatCurrencies' | 'exchangeRate' | 'exchangeCalculate' | 'exchangePairs' | 'cryptoPrices' | 'systemStatus', reqData?: object) {
         try {
+            await this.initialization;
+            if (reqData) {
+                var validator = ajv.compile(this.methods[method].schema)
+                var valid = validator(reqData)
+                if (!valid) throw new Error(JSON.stringify(validator.errors, null, 2))
+            }
             const response = await axios.post(`${this.apiBaseURL}${this.methods[method].path}`, reqData || {});
             return response.data;
         } catch (err) {

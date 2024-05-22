@@ -1,30 +1,42 @@
 import axios from "axios";
 import Ajv from 'ajv';
-import { readFileSync } from "fs";
+import { readFile } from "fs/promises";
 import { join } from 'path';
 const ajv = new Ajv({ allErrors: true })
 
+/**
+ * A class representing a client for interacting with the Oxapay Merchant API.
+ * @param {string} apiKey - The API key for authentication.
+ * @param {boolean} debugLogger - A flag to enable/disable debug logging.
+ * @example
+ * const client = new ClientMerchant('your-api-key', true);
+ * // or
+ * const client = new ClientMerchant('your-api-key');
+ */
 class ClientMerchant {
-    /**
-    * Creates a new instance of the Merchant .
-    * @param {string} apiKey - The API key for authentication.
-    */
     private apiBaseURL = "https://api.oxapay.com/";
-    private methods = JSON.parse(readFileSync(join(__dirname, 'methodInfos.json')).toString()).Merchant
+    private methods: Promise<any>;
     private apiKey: string;
     private isDebug: Boolean;
+    private initialization: Promise<any>;
+
     constructor(apiKey: string, debugLogger = false) {
         this.apiKey = apiKey;
         this.isDebug = debugLogger;
+        this.initialization = readFile(join(__dirname, 'methodInfos.json'), 'utf-8')
+            .then(data => {
+                this.methods = JSON.parse(data).Merchant
+            })
+            .catch(err => { throw new Error(err.message) });
     }
 
     private async request(method: 'allowedCoins' | 'createInvoice' | 'whiteLabel' | 'createStaticAddress' | 'revokeStaticAddress' | 'exchangeRequest' | 'exchangeHistory' | 'paymentInfo' | 'paymentHistory' | 'exchangeRate', reqData?: object) {
         try {
+            await this.initialization;
             if (reqData) {
                 var validator = ajv.compile(this.methods[method].schema)
                 var valid = await validator(reqData)
                 if (!valid) throw new Error(JSON.stringify(validator.errors, null, 2))
-
             }
             const response = await axios.post(`${this.apiBaseURL}${this.methods[method].path}`, {
                 merchant: this.apiKey,
@@ -54,7 +66,7 @@ class ClientMerchant {
     * @param {integer} reqData.amount - Amount to be requested in the invoice (type: integer).
     * @param {string} reqData.currency - Currency of the request amount (type: string).
     * @param {integer} reqData.lifeTime - Lifetime or duration of the invoice (type: integer).
-    * @param {float} reqData.feePaidByPayer - Fee paid by the payer (type: float).
+    * @param {0|1} reqData.feePaidByPayer - Fee paid by the payer (type: float).
     * @param {float} reqData.underPaidCover - Underpaid coverage (type: float).
     * @param {string} reqData.callbackUrl - URL for callback notifications (type: string).
     * @param {string} reqData.returnUrl - URL for redirection after completion (type: string).
@@ -70,7 +82,7 @@ class ClientMerchant {
         currency?: string;
         callbackUrl?: string;
         underPaidCover?: number;
-        feePaidByPayer?: number;
+        feePaidByPayer?: 0 | 1;
         lifeTime?: number;
         email?: string;
         orderId?: string;
@@ -94,7 +106,7 @@ class ClientMerchant {
     * @param {string} reqData.currency - Currency of the request amount (type: string).
     * @param {string} reqData.payCurrency - Currency for payment (type: string).
     * @param {integer} reqData.lifeTime - Lifetime or duration of the invoice (type: integer).
-    * @param {float} reqData.feePaidByPayer - Fee paid by the payer (type: float).
+    * @param {0|1} reqData.feePaidByPayer - Fee paid by the payer (type: float).
     * @param {float} reqData.underPaidCover - Underpaid coverage (type: float).
     * @param {string} reqData.callbackUrl - URL for callback notifications (type: string).
     * @param {string} reqData.description - Description of the invoice (type: string).
@@ -110,7 +122,7 @@ class ClientMerchant {
         currency?: string;
         payCurrency: string;
         lifeTime?: number;
-        feePaidByPayer?: number;
+        feePaidByPayer?: 0 | 1;
         underPaidCover?: number;
         callbackUrl?: string;
         description?: string;
@@ -129,7 +141,7 @@ class ClientMerchant {
         callbackUrl: string;
         description: string;
         email: string;
-        feePaidByPayer: number;
+        feePaidByPayer: 0 | 1;
         lifeTime: number;
         orderId: string;
         underPaidCover: number;
@@ -287,12 +299,12 @@ class ClientMerchant {
         email: string;
         orderId: string;
         description: string;
-        feePaidByPayer: number;
+        feePaidByPayer: 0 | 1;
         underPaidCover: number;
         date: string;
         payDate: string;
     }> {
-        return this.request('paymentInfo', reqData);
+        return this.request('paymentInfo', reqData)
     }
 
 
@@ -309,7 +321,7 @@ class ClientMerchant {
     * @param {string} reqData.network - Network name for filtering (type: string).
     * @param {string} reqData.address - Address for filtering (type: string).
     * @param {string} reqData.type - Payment type for filtering (type: string).
-    * @param {number} reqData.feePaidByPayer - Fee paid by the payer for filtering (type: float).
+    * @param {0|1} reqData.feePaidByPayer - Fee paid by the payer for filtering (type: float).
     * @param {string} reqData.status - Payment status for filtering (type: string).
     * @param {string} reqData.orderId - Order identifier for filtering (type: string).
     * @param {number} reqData.size - Number of results per page (type: integer).
@@ -321,51 +333,51 @@ class ClientMerchant {
     * @throws {Error} - If there's an error during the API call.
     */
     async paymentHistory(reqData: {
-        orderBy?: string;
-        sortBy?: string;
-        trackId?: number;
-        page?: number;
-        size?: number;
-        orderId?: string;
-        status?: string;
-        feePaidByPayer?: number;
-        type?: string;
-        network?: string;
-        payCurrency?: string;
-        currency?: string;
-        toAmount?: number;
-        fromAmount?: number;
-        toDate?: string;
-        fromDate?: string;
-        address?: string;
-        txID?: string;
+        orderBy?: string,
+        sortBy?: string,
+        trackId?: number,
+        page?: number,
+        size?: number,
+        orderId?: string,
+        status?: string,
+        feePaidByPayer?: 0 | 1,
+        type?: string,
+        network?: string,
+        payCurrency?: string,
+        currency?: string,
+        toAmount?: number,
+        fromAmount?: number,
+        toDate?: string,
+        fromDate?: string,
+        address?: string,
+        txID?: string,
     }): Promise<{
         result: 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110 | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119 | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127 | 128 | 129 | 130 | 131 | 135 | 500
-        message: string;
+        message: string,
         data: {
-            trackId: string;
-            address: string;
-            amount: string;
-            currency: string;
-            payAmount: string;
-            payCurrency: string;
-            network: string;
-            feePaidByPayer: number;
-            underPaidCover: number;
-            status: string;
-            type: string;
-            txID: string;
-            date: string;
-            payDate: string;
-            email: string;
-            description: string;
-        }[];
+            trackId: string,
+            address: string,
+            amount: string,
+            currency: string,
+            payAmount: string,
+            payCurrency: string,
+            network: string,
+            feePaidByPayer: 0 | 1,
+            underPaidCover: number,
+            status: string,
+            type: string,
+            txID: string,
+            date: string,
+            payDate: string,
+            email: string,
+            description: string,
+        }[],
         meta: {
-            size: number;
-            page: number;
-            pages: number;
-            total: number;
-        };
+            size: number,
+            page: number,
+            pages: number,
+            total: number,
+        },
     }> {
         return this.request('paymentHistory', reqData);
     }
@@ -381,14 +393,14 @@ class ClientMerchant {
     */
 
     async exchangeRate(reqData: {
-        fromCurrency: string;
-        toCurrency: string;
+        fromCurrency: string,
+        toCurrency: string,
     }): Promise<{
         result: 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110 | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119 | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127 | 128 | 129 | 130 | 131 | 135 | 500
-        message: string;
-        rate: string;
+        message: string,
+        rate: string,
     }> {
-        return this.request('exchangeRate', reqData);
+        return this.request('exchangeRate', reqData)
     }
 }
 

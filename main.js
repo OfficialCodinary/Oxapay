@@ -7,8 +7,3 @@ var merchant_1 = require("./clients/merchant");
 exports.Merchant = merchant_1.default;
 var payout_1 = require("./clients/payout");
 exports.Payout = payout_1.default;
-exports.default = {
-    General: general_1.default,
-    Merchant: merchant_1.default,
-    Payout: payout_1.default
-};

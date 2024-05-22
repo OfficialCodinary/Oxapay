@@ -49,20 +49,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
 var ajv_1 = require("ajv");
-var fs_1 = require("fs");
+var promises_1 = require("fs/promises");
 var path_1 = require("path");
 var ajv = new ajv_1.default({ allErrors: true });
+/**
+ * A class representing a client for interacting with the Oxapay Merchant API.
+ * @param {string} apiKey - The API key for authentication.
+ * @param {boolean} debugLogger - A flag to enable/disable debug logging.
+ * @example
+ * const client = new ClientMerchant('your-api-key', true);
+ * // or
+ * const client = new ClientMerchant('your-api-key');
+ */
 var ClientMerchant = /** @class */ (function () {
     function ClientMerchant(apiKey, debugLogger) {
         if (debugLogger === void 0) { debugLogger = false; }
-        /**
-        * Creates a new instance of the Merchant .
-        * @param {string} apiKey - The API key for authentication.
-        */
+        var _this = this;
         this.apiBaseURL = "https://api.oxapay.com/";
-        this.methods = JSON.parse((0, fs_1.readFileSync)((0, path_1.join)(__dirname, 'methodInfos.json')).toString()).Merchant;
         this.apiKey = apiKey;
         this.isDebug = debugLogger;
+        this.initialization = (0, promises_1.readFile)((0, path_1.join)(__dirname, 'methodInfos.json'), 'utf-8')
+            .then(function (data) {
+            _this.methods = JSON.parse(data).Merchant;
+        })
+            .catch(function (err) { throw new Error(err.message); });
     }
     ClientMerchant.prototype.request = function (method, reqData) {
         return __awaiter(this, void 0, void 0, function () {
@@ -70,25 +80,28 @@ var ClientMerchant = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
-                        if (!reqData) return [3 /*break*/, 2];
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, this.initialization];
+                    case 1:
+                        _a.sent();
+                        if (!reqData) return [3 /*break*/, 3];
                         validator = ajv.compile(this.methods[method].schema);
                         return [4 /*yield*/, validator(reqData)];
-                    case 1:
+                    case 2:
                         valid = _a.sent();
                         if (!valid)
                             throw new Error(JSON.stringify(validator.errors, null, 2));
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, axios_1.default.post("".concat(this.apiBaseURL).concat(this.methods[method].path), __assign({ merchant: this.apiKey }, reqData))];
-                    case 3:
+                        _a.label = 3;
+                    case 3: return [4 /*yield*/, axios_1.default.post("".concat(this.apiBaseURL).concat(this.methods[method].path), __assign({ merchant: this.apiKey }, reqData))];
+                    case 4:
                         response = _a.sent();
                         if (this.isDebug)
                             console.log(response);
                         return [2 /*return*/, response.data];
-                    case 4:
+                    case 5:
                         err_1 = _a.sent();
                         throw new Error(err_1.message);
-                    case 5: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -111,7 +124,7 @@ var ClientMerchant = /** @class */ (function () {
     * @param {integer} reqData.amount - Amount to be requested in the invoice (type: integer).
     * @param {string} reqData.currency - Currency of the request amount (type: string).
     * @param {integer} reqData.lifeTime - Lifetime or duration of the invoice (type: integer).
-    * @param {float} reqData.feePaidByPayer - Fee paid by the payer (type: float).
+    * @param {0|1} reqData.feePaidByPayer - Fee paid by the payer (type: float).
     * @param {float} reqData.underPaidCover - Underpaid coverage (type: float).
     * @param {string} reqData.callbackUrl - URL for callback notifications (type: string).
     * @param {string} reqData.returnUrl - URL for redirection after completion (type: string).
@@ -137,7 +150,7 @@ var ClientMerchant = /** @class */ (function () {
     * @param {string} reqData.currency - Currency of the request amount (type: string).
     * @param {string} reqData.payCurrency - Currency for payment (type: string).
     * @param {integer} reqData.lifeTime - Lifetime or duration of the invoice (type: integer).
-    * @param {float} reqData.feePaidByPayer - Fee paid by the payer (type: float).
+    * @param {0|1} reqData.feePaidByPayer - Fee paid by the payer (type: float).
     * @param {float} reqData.underPaidCover - Underpaid coverage (type: float).
     * @param {string} reqData.callbackUrl - URL for callback notifications (type: string).
     * @param {string} reqData.description - Description of the invoice (type: string).
@@ -253,7 +266,7 @@ var ClientMerchant = /** @class */ (function () {
     * @param {string} reqData.network - Network name for filtering (type: string).
     * @param {string} reqData.address - Address for filtering (type: string).
     * @param {string} reqData.type - Payment type for filtering (type: string).
-    * @param {number} reqData.feePaidByPayer - Fee paid by the payer for filtering (type: float).
+    * @param {0|1} reqData.feePaidByPayer - Fee paid by the payer for filtering (type: float).
     * @param {string} reqData.status - Payment status for filtering (type: string).
     * @param {string} reqData.orderId - Order identifier for filtering (type: string).
     * @param {number} reqData.size - Number of results per page (type: integer).
