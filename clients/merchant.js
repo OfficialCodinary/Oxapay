@@ -48,10 +48,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
-var ajv_1 = require("ajv");
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
-var ajv = new ajv_1.default({ allErrors: true });
 /**
  * A class representing a client for interacting with the Oxapay Merchant API.
  * @param {string} apiKey - The API key for authentication.
@@ -62,12 +60,10 @@ var ajv = new ajv_1.default({ allErrors: true });
  * const client = new ClientMerchant('your-api-key');
  */
 var ClientMerchant = /** @class */ (function () {
-    function ClientMerchant(apiKey, debugLogger) {
-        if (debugLogger === void 0) { debugLogger = false; }
+    function ClientMerchant(apiKey) {
         var _this = this;
         this.apiBaseURL = "https://api.oxapay.com/";
         this.apiKey = apiKey;
-        this.isDebug = debugLogger;
         this.initialization = (0, promises_1.readFile)((0, path_1.join)(__dirname, 'methodInfos.json'), 'utf-8')
             .then(function (data) {
             _this.methods = JSON.parse(data).Merchant;
@@ -76,32 +72,22 @@ var ClientMerchant = /** @class */ (function () {
     }
     ClientMerchant.prototype.request = function (method, reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var validator, valid, response, err_1;
+            var response, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, this.initialization];
                     case 1:
                         _a.sent();
-                        if (!reqData) return [3 /*break*/, 3];
-                        validator = ajv.compile(this.methods[method].schema);
-                        return [4 /*yield*/, validator(reqData)];
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.apiBaseURL).concat(this.methods[method].path), __assign({ merchant: this.apiKey }, reqData))];
                     case 2:
-                        valid = _a.sent();
-                        if (!valid)
-                            throw new Error(JSON.stringify(validator.errors, null, 2));
-                        _a.label = 3;
-                    case 3: return [4 /*yield*/, axios_1.default.post("".concat(this.apiBaseURL).concat(this.methods[method].path), __assign({ merchant: this.apiKey }, reqData))];
-                    case 4:
                         response = _a.sent();
-                        if (this.isDebug)
-                            console.log(response);
                         return [2 /*return*/, response.data];
-                    case 5:
+                    case 3:
                         err_1 = _a.sent();
                         throw new Error(err_1.message);
-                    case 6: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

@@ -1,8 +1,6 @@
 import axios from "axios";
-import Ajv from 'ajv';
 import { readFile } from "fs/promises";
 import { join } from 'path';
-const ajv = new Ajv({ allErrors: true })
 
 /**
  * A class representing a client for interacting with the Oxapay Merchant API.
@@ -20,9 +18,8 @@ class ClientMerchant {
     private isDebug: Boolean;
     private initialization: Promise<any>;
 
-    constructor(apiKey: string, debugLogger = false) {
+    constructor(apiKey: string) {
         this.apiKey = apiKey;
-        this.isDebug = debugLogger;
         this.initialization = readFile(join(__dirname, 'methodInfos.json'), 'utf-8')
             .then(data => {
                 this.methods = JSON.parse(data).Merchant
@@ -33,16 +30,10 @@ class ClientMerchant {
     private async request(method: 'allowedCoins' | 'createInvoice' | 'whiteLabel' | 'createStaticAddress' | 'revokeStaticAddress' | 'exchangeRequest' | 'exchangeHistory' | 'paymentInfo' | 'paymentHistory' | 'exchangeRate', reqData?: object) {
         try {
             await this.initialization;
-            if (reqData) {
-                var validator = ajv.compile(this.methods[method].schema)
-                var valid = await validator(reqData)
-                if (!valid) throw new Error(JSON.stringify(validator.errors, null, 2))
-            }
             const response = await axios.post(`${this.apiBaseURL}${this.methods[method].path}`, {
                 merchant: this.apiKey,
                 ...reqData,
             });
-            if (this.isDebug) console.log(response)
             return response.data;
         } catch (err) {
             throw new Error(err.message);

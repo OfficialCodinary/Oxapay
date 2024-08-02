@@ -37,10 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
-var ajv_1 = require("ajv");
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
-var ajv = new ajv_1.default({ allErrors: true });
 /**
  * A class representing a client for interacting with the Oxapay Merchant API.
  */
@@ -56,7 +54,7 @@ var ClientGeneral = /** @class */ (function () {
     }
     ClientGeneral.prototype.request = function (method, reqData) {
         return __awaiter(this, void 0, void 0, function () {
-            var validator, valid, response, err_1;
+            var response, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -64,12 +62,6 @@ var ClientGeneral = /** @class */ (function () {
                         return [4 /*yield*/, this.initialization];
                     case 1:
                         _a.sent();
-                        if (reqData) {
-                            validator = ajv.compile(this.methods[method].schema);
-                            valid = validator(reqData);
-                            if (!valid)
-                                throw new Error(JSON.stringify(validator.errors, null, 2));
-                        }
                         return [4 /*yield*/, axios_1.default.post("".concat(this.apiBaseURL).concat(this.methods[method].path), reqData || {})];
                     case 2:
                         response = _a.sent();
