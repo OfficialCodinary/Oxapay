@@ -22,7 +22,7 @@ type ResponseType<T> = {
  * A class representing a client for interacting with the Oxapay Common API.
  */
 class ClientCommon {
-    private apiBaseURL = "https://api.oxapay.com/v1/common";
+    private apiBaseURL = "https://api.oxapay.com/v1/common/";
     private methods: any;
     private initialization: Promise<void>;
 

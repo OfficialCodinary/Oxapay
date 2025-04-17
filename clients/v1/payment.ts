@@ -28,7 +28,7 @@ type ResponseType<T> = {
  * const client = new ClientPayment('your-api-key');
  */
 class ClientPayment {
-    private apiBaseURL = "https://api.oxapay.com/v1/payment";
+    private apiBaseURL = "https://api.oxapay.com/v1/payment/";
     private methods: any;
     private apiKey: string;
     private isDebug: boolean;

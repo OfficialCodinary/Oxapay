@@ -45,7 +45,7 @@ var path_1 = require("path");
 var ClientCommon = /** @class */ (function () {
     function ClientCommon() {
         var _this = this;
-        this.apiBaseURL = "https://api.oxapay.com/v1/common";
+        this.apiBaseURL = "https://api.oxapay.com/v1/common/";
         this.initialization = (0, promises_1.readFile)((0, path_1.join)(__dirname, "methodInfos.json"), "utf-8")
             .then(function (data) {
             _this.methods = JSON.parse(data).Common;

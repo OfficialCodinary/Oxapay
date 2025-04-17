@@ -52,7 +52,7 @@ var ClientPayment = /** @class */ (function () {
     function ClientPayment(apiKey, debugLogger) {
         if (debugLogger === void 0) { debugLogger = false; }
         var _this = this;
-        this.apiBaseURL = "https://api.oxapay.com/v1/payment";
+        this.apiBaseURL = "https://api.oxapay.com/v1/payment/";
         this.apiKey = apiKey;
         this.isDebug = debugLogger;
         if (!apiKey)

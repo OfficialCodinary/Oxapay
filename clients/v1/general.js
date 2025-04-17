@@ -46,7 +46,7 @@ var ClientGeneral = /** @class */ (function () {
     function ClientGeneral(apiKey, debugLogger) {
         if (debugLogger === void 0) { debugLogger = false; }
         var _this = this;
-        this.apiBaseURL = "https://api.oxapay.com/v1/general";
+        this.apiBaseURL = "https://api.oxapay.com/v1/general/";
         if (!apiKey)
             throw new Error("API key is required");
         if (typeof debugLogger !== "boolean")

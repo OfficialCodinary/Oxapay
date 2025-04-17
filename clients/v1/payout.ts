@@ -19,7 +19,7 @@ type ResponseType<T> = {
 };
 
 class ClientPayout {
-    private apiBaseURL = "https://api.oxapay.com/v1/payout";
+    private apiBaseURL = "https://api.oxapay.com/v1/payout/";
     private methods: any;
     private apiKey: string;
     private isDebug: boolean;
