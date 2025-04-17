@@ -1,5 +1,5 @@
 import legacyGeneral from './clients/legacy/general';
-import legacyMerchant from './clients/legacy/merchant'
+import legacyMerchant from './clients/legacy/merchant';
 import legacyPayout from './clients/legacy/payout'
 
 import V1Payment from './clients/v1/payment';
