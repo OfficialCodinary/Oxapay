@@ -113,7 +113,7 @@ class ClientPayment {
         auto_withdrawal?: 0 | 1;
         callback_url?: string;
         email?: string;
-        orderId?: string;
+        order_id?: string;
         description?: string;
     }): Promise<ResponseType<{
         track_id: string;
