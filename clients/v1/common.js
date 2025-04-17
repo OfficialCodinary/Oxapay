@@ -39,26 +39,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
-var ClientPayout = /** @class */ (function () {
-    function ClientPayout(apiKey, debugLogger) {
-        if (debugLogger === void 0) { debugLogger = false; }
+/**
+ * A class representing a client for interacting with the Oxapay Common API.
+ */
+var ClientCommon = /** @class */ (function () {
+    function ClientCommon() {
         var _this = this;
-        this.apiBaseURL = "https://api.oxapay.com/v1/payout";
-        this.apiKey = apiKey;
-        this.isDebug = debugLogger;
-        if (!apiKey)
-            throw new Error('API key is required');
-        if (typeof debugLogger !== 'boolean')
-            throw new Error('Debug logger must be a boolean');
-        this.initialization = (0, promises_1.readFile)((0, path_1.join)(__dirname, 'methodInfos.json'), 'utf-8')
+        this.apiBaseURL = "https://api.oxapay.com/v1/common";
+        this.initialization = (0, promises_1.readFile)((0, path_1.join)(__dirname, "methodInfos.json"), "utf-8")
             .then(function (data) {
-            _this.methods = JSON.parse(data).Payout;
+            _this.methods = JSON.parse(data).Common;
         })
             .catch(function (err) {
             throw new Error("Failed to load method information: ".concat(err.message));
         });
     }
-    ClientPayout.prototype.request = function (method, reqData, explicitUrl) {
+    ClientCommon.prototype.request = function (method, reqData) {
         return __awaiter(this, void 0, void 0, function () {
             var methodInfo, url, response, err_1;
             return __generator(this, function (_a) {
@@ -71,19 +67,14 @@ var ClientPayout = /** @class */ (function () {
                         methodInfo = this.methods[method];
                         if (!methodInfo)
                             throw new Error("Method ".concat(String(method), " not found in methodInfos.json"));
-                        url = explicitUrl !== null && explicitUrl !== void 0 ? explicitUrl : "".concat(this.apiBaseURL).concat(methodInfo.path);
+                        url = "".concat(this.apiBaseURL).concat(methodInfo.path);
                         return [4 /*yield*/, (0, axios_1.default)({
                                 method: methodInfo.reqType.toLowerCase(),
                                 url: url,
-                                headers: {
-                                    "merchant_api_key": this.apiKey,
-                                },
-                                data: reqData,
+                                data: reqData || {},
                             })];
                     case 2:
                         response = _a.sent();
-                        if (this.isDebug)
-                            console.log(response.data);
                         return [2 /*return*/, response.data];
                     case 3:
                         err_1 = _a.sent();
@@ -99,30 +90,41 @@ var ClientPayout = /** @class */ (function () {
             });
         });
     };
-    ClientPayout.prototype.createPayout = function (reqData) {
+    ClientCommon.prototype.prices = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('generatePayout', reqData)];
+                return [2 /*return*/, this.request("prices")];
             });
         });
     };
-    ClientPayout.prototype.payoutHistory = function (reqData) {
+    ClientCommon.prototype.supportedCurrencies = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.request('payoutHistory', reqData)];
+                return [2 /*return*/, this.request("supportedCurrencies")];
             });
         });
     };
-    ClientPayout.prototype.payoutInfo = function (reqData) {
+    ClientCommon.prototype.supportedFiatCurrencies = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var methodInfo, url;
             return __generator(this, function (_a) {
-                methodInfo = this.methods['payoutInfo'];
-                url = "".concat(this.apiBaseURL).concat(methodInfo.path, "/").concat(reqData.trackId);
-                return [2 /*return*/, this.request('payoutInfo', reqData, url)];
+                return [2 /*return*/, this.request("supportedFiatCurrencies")];
             });
         });
     };
-    return ClientPayout;
+    ClientCommon.prototype.supportedNetworks = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request("supportedNetworks")];
+            });
+        });
+    };
+    ClientCommon.prototype.systemStatus = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.request("systemStatus")];
+            });
+        });
+    };
+    return ClientCommon;
 }());
-exports.default = ClientPayout;
+exports.default = ClientCommon;

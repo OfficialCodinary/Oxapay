@@ -3,14 +3,21 @@ import { readFile } from "fs/promises";
 import { join } from 'path';
 
 /**
- * Create a new client for interacting with the Oxapay Merchant API.
- * @param {string} apiKey - The API key for the Oxapay Merchant API.
- * @param {boolean} debugLogger - A flag to enable/disable debug logging.
- * @example
- * const client = new ClientPayout('your-api-key', true);
- * // or
- * const client = new ClientPayout('your-api-key');
+ * A generic type for API responses.
+ * @template T - The type of the response data.
  */
+type ResponseType<T> = {
+    data: T;
+    message: string;
+    error: {
+        type: string;
+        key: string;
+        message: string;
+    } | {};
+    status: number;
+    version: string;
+};
+
 class ClientPayout {
     private apiBaseURL = "https://api.oxapay.com/v1/payout";
     private methods: any;
@@ -33,7 +40,7 @@ class ClientPayout {
             });
     }
 
-    private async request(method: keyof typeof this.methods, reqData?: object, explicitUrl?: string) {
+    private async request<T>(method: keyof typeof this.methods, reqData?: object, explicitUrl?: string): Promise<ResponseType<T>> {
         try {
             await this.initialization;
             const methodInfo = this.methods[method];
@@ -46,9 +53,7 @@ class ClientPayout {
                 headers: {
                     "merchant_api_key": this.apiKey,
                 },
-                data: {
-                    ...reqData,
-                },
+                data: reqData,
             });
 
             if (this.isDebug) console.log(response.data);
@@ -62,12 +67,6 @@ class ClientPayout {
         }
     }
 
-    /**
-     * Create a payout transaction.
-     *
-     * @param {object} reqData - The request data for creating a payout.
-     * @returns {Promise<object>} - A promise that resolves with the payout transaction response data.
-     */
     async createPayout(reqData: {
         address: string;
         currency: string;
@@ -76,29 +75,13 @@ class ClientPayout {
         callback_url?: string;
         memo?: string;
         description?: string;
-    }): Promise<{
-        data: {
-            track_id: string, 
-            status: string // The status of payout transaction.
-        },
-        message: string, 
-        error?: {
-            type: string, 
-            key: string, 
-            message: string 
-        },
-        status: number, 
-        version: string
-    }> {
+    }): Promise<ResponseType<{
+        track_id: string;
+        status: string;
+    }>> {
         return this.request('generatePayout', reqData);
     }
 
-    /**
-     * Retrieve payout transaction history with optional filtering and pagination.
-     *
-     * @param {object} reqData - The request data for retrieving payout transaction history.
-     * @returns {Promise<object>} - A promise that resolves with the payout transaction history response data.
-     */
     async payoutHistory(reqData: {
         status?: string;
         type?: string;
@@ -112,69 +95,46 @@ class ClientPayout {
         sort_type?: 'asc' | 'desc';
         size?: number;
         page?: number;
-    }): Promise<{
-        data: {
-          list: 
-              {
-                track_id: string,
-                address: string, 
-                currency: string, 
-                network: string, 
-                amount: number, 
-                fee: number, 
-                status: string,
-                tx_hash: string,
-                description: string, 
-                internal: boolean, 
-                memo: string,
-                date: number 
-            }[],
-          meta: {
-            page: number, 
-            last_page: number,
-            total: number
-          },
-        },
-        message: string,  
-        error: {
-            type: string, 
-            key: string, 
-            message: string 
-        } | {},
-        status: number,
-        version: string
-      }> {
+    }): Promise<ResponseType<{
+        list: {
+            track_id: string;
+            address: string;
+            currency: string;
+            network: string;
+            amount: number;
+            fee: number;
+            status: string;
+            tx_hash: string;
+            description: string;
+            internal: boolean;
+            memo: string;
+            date: number;
+        }[];
+        meta: {
+            page: number;
+            last_page: number;
+            total: number;
+        };
+    }>> {
         return this.request('payoutHistory', reqData);
     }
 
-    /**
-     * Inquire about a payout using a specific track ID.
-     *
-     * @param {object} reqData - The request data for payout inquiry.
-     * @returns {Promise<object>} - A promise that resolves with the payout inquiry response data.
-     */
     async payoutInfo(reqData: {
         trackId: string;
-    }): Promise<{
-        data: {
-            track_id: string,
-            address: string, 
-            currency: string,
-            network: string,
-            amount: number, 
-            fee: number, 
-            status: string, 
-            tx_hash: string, 
-            description: string,
-            internal: boolean, 
-            memo: string,
-            date: number
-        },
-        message: string,
-        error: object,
-        status: number,
-        version: string
-    }> {
+    }): Promise<ResponseType<{
+        track_id: string;
+        address: string;
+        currency: string;
+        network: string;
+        amount: number;
+        fee: number;
+        status: string;
+        tx_hash: string;
+        description: string;
+        internal: boolean;
+        memo: string;
+        date: number;
+    }>> {
         const methodInfo = this.methods['payoutInfo'];
         const url = `${this.apiBaseURL}${methodInfo.path}/${reqData.trackId}`;
         return this.request('payoutInfo', reqData, url);

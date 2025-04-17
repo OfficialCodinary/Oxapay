@@ -13,7 +13,7 @@ type ResponseType<T> = {
         type: string;
         key: string;
         message: string;
-    } | {};
+    };
     status: number;
     version: string;
 };
