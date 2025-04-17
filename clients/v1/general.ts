@@ -24,9 +24,17 @@ type ResponseType<T> = {
 class ClientGeneral {
     private apiBaseURL = "https://api.oxapay.com/v1/general";
     private methods: any;
+    private apiKey: string;
+    private isDebug: boolean;
     private initialization: Promise<void>;
 
-    constructor() {
+    constructor(apiKey: string, debugLogger = false) {
+        if (!apiKey) throw new Error("API key is required");
+        if (typeof debugLogger !== "boolean") throw new Error("Debug logger must be a boolean");
+
+        this.apiKey = apiKey;
+        this.isDebug = debugLogger;
+
         this.initialization = readFile(join(__dirname, "methodInfos.json"), "utf-8")
             .then((data) => {
                 this.methods = JSON.parse(data).General;
@@ -44,11 +52,14 @@ class ClientGeneral {
 
             const url = `${this.apiBaseURL}${methodInfo.path}`;
             const response = await axios({
+                headers: {
+                    "merchant_api_key": this.apiKey,
+                },
                 method: methodInfo.reqType.toLowerCase(),
                 url,
                 data: reqData || {},
             });
-
+            if (this.isDebug) console.log(response.data);
             return response.data;
         } catch (err) {
             if (err instanceof Error) {

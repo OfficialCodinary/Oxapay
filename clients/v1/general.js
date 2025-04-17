@@ -43,9 +43,16 @@ var path_1 = require("path");
  * A class representing a client for interacting with the Oxapay General API.
  */
 var ClientGeneral = /** @class */ (function () {
-    function ClientGeneral() {
+    function ClientGeneral(apiKey, debugLogger) {
+        if (debugLogger === void 0) { debugLogger = false; }
         var _this = this;
         this.apiBaseURL = "https://api.oxapay.com/v1/general";
+        if (!apiKey)
+            throw new Error("API key is required");
+        if (typeof debugLogger !== "boolean")
+            throw new Error("Debug logger must be a boolean");
+        this.apiKey = apiKey;
+        this.isDebug = debugLogger;
         this.initialization = (0, promises_1.readFile)((0, path_1.join)(__dirname, "methodInfos.json"), "utf-8")
             .then(function (data) {
             _this.methods = JSON.parse(data).General;
@@ -69,12 +76,17 @@ var ClientGeneral = /** @class */ (function () {
                             throw new Error("Method ".concat(String(method), " not found in methodInfos.json"));
                         url = "".concat(this.apiBaseURL).concat(methodInfo.path);
                         return [4 /*yield*/, (0, axios_1.default)({
+                                headers: {
+                                    "merchant_api_key": this.apiKey,
+                                },
                                 method: methodInfo.reqType.toLowerCase(),
                                 url: url,
                                 data: reqData || {},
                             })];
                     case 2:
                         response = _a.sent();
+                        if (this.isDebug)
+                            console.log(response.data);
                         return [2 /*return*/, response.data];
                     case 3:
                         err_1 = _a.sent();
