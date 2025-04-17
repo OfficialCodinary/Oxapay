@@ -1,0 +1,104 @@
+{
+    "Common": {
+        "prices": {
+            "reqType": "GET",
+            "path": "prices"
+        },
+        "supportedCurrencies": {
+            "reqType": "GET",
+            "path": "currencies"
+        }, 
+        "supportedFiatCurrencies": {
+            "reqType": "GET",
+            "path": "fiats"
+        },
+        "supportedNetworks": {
+            "reqType": "GET",
+            "path": "networks"
+        },
+        "systemStatus": {
+            "reqType": "GET",
+            "path": "monitor"
+        }
+    },
+    "General": {
+        "swapRequest": {
+            "reqType": "POST",
+            "path": "swap"
+        },
+        "swapHistory": {
+            "reqType": "GET",
+            "path": "swap"
+        },
+        "swapPairs": {
+            "reqType": "GET",
+            "path": "swap/pairs"
+        },
+        "swapCalculate": {
+            "reqType": "POST",
+            "path": "swap/calculate"
+        },
+        "swapRate": {
+            "reqType": "POST",
+            "path": "swap/rate"
+        },
+        "accountBalance": {
+            "reqType": "GET",
+            "path": "account/balance"
+        }
+    },
+    "Payment": {
+        "generateInvoice": {
+            "reqType": "POST",
+            "path": "invoice"
+        },
+        "generateWhiteLabel": {
+            "reqType": "POST",
+            "path": "white-label"
+        },
+        "generateStaticAddress": {
+            "reqType": "POST",
+            "path": "static-address"
+        },
+        "revokeStaticAddress": {
+            "reqType": "POST",
+            "path": "static-address/revoke"
+        },
+        "listStaticAddress": {
+            "reqType": "GET",
+            "path": "static-address"
+        },
+        "paymentInfo": {
+            "reqType": "GET",
+            "path": "",
+            "pathVars": {
+                "trackId": "number"
+            }
+        },
+        "paymentHistory": {
+            "reqType": "GET",
+            "path": ""
+        },
+        "acceptedCurrencies": {
+            "reqType": "GET",
+            "path": "accepted-currencies"
+        }
+    },
+    "Payout": {
+        "generatePayout": {
+            "reqType": "POST",
+            "path": "payout"
+        },
+        "payoutInfo": {
+            "reqType": "GET",
+            "path": "payout",
+            "pathVars": {
+                "trackId": "string"
+            }
+        },
+        "payoutHistory": {
+            "reqType": "GET",
+            "path": "payout"
+        }
+    }
+}
