@@ -108,7 +108,7 @@ class ClientPayment {
         network?: string;
         lifetime?: number;
         fee_paid_by_payer?: 0 | 1;
-        under_paid_cover?: number;
+        under_paid_coverage?: number;
         to_currency?: string;
         auto_withdrawal?: 0 | 1;
         callback_url?: string;
