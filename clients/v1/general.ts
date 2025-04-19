@@ -53,7 +53,7 @@ class ClientGeneral {
             const url = `${this.apiBaseURL}${methodInfo.path}`;
             const response = await axios({
                 headers: {
-                    "merchant_api_key": this.apiKey,
+                    "general_api_key": this.apiKey,
                 },
                 method: methodInfo.reqType.toLowerCase(),
                 url,

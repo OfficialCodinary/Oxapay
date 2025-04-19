@@ -47,6 +47,7 @@ class ClientCommon {
                 method: methodInfo.reqType.toLowerCase(),
                 url,
                 data: reqData || {},
+                validateStatus: () => true, 
             });
 
             return response.data;

@@ -51,9 +51,10 @@ class ClientPayout {
                 method: methodInfo.reqType.toLowerCase(),
                 url,
                 headers: {
-                    "merchant_api_key": this.apiKey,
+                    "payout_api_key": this.apiKey,
                 },
                 data: reqData,
+                validateStatus: () => true, 
             });
 
             if (this.isDebug) console.log(response.data);

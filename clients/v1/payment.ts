@@ -63,6 +63,7 @@ class ClientPayment {
                     "merchant_api_key": this.apiKey,
                 },
                 data: reqData,
+                validateStatus: () => true, 
             });
 
             if (this.isDebug) console.log(response.data);

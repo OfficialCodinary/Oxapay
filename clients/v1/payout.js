@@ -76,9 +76,10 @@ var ClientPayout = /** @class */ (function () {
                                 method: methodInfo.reqType.toLowerCase(),
                                 url: url,
                                 headers: {
-                                    "merchant_api_key": this.apiKey,
+                                    "payout_api_key": this.apiKey,
                                 },
                                 data: reqData,
+                                validateStatus: function () { return true; },
                             })];
                     case 2:
                         response = _a.sent();

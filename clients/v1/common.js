@@ -72,6 +72,7 @@ var ClientCommon = /** @class */ (function () {
                                 method: methodInfo.reqType.toLowerCase(),
                                 url: url,
                                 data: reqData || {},
+                                validateStatus: function () { return true; },
                             })];
                     case 2:
                         response = _a.sent();

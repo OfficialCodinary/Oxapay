@@ -88,6 +88,7 @@ var ClientPayment = /** @class */ (function () {
                                     "merchant_api_key": this.apiKey,
                                 },
                                 data: reqData,
+                                validateStatus: function () { return true; },
                             })];
                     case 2:
                         response = _a.sent();
