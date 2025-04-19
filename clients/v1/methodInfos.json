@@ -87,18 +87,18 @@
     "Payout": {
         "generatePayout": {
             "reqType": "POST",
-            "path": "payout"
+            "path": ""
         },
         "payoutInfo": {
             "reqType": "GET",
-            "path": "payout",
+            "path": "",
             "pathVars": {
                 "trackId": "string"
             }
         },
         "payoutHistory": {
             "reqType": "GET",
-            "path": "payout"
+            "path": ""
         }
     }
 }
