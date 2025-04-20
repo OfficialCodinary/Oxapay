@@ -162,7 +162,7 @@ var ClientPayment = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         methodInfo = this.methods["paymentInfo"];
-                        url = "".concat(this.apiBaseURL).concat(methodInfo.path, "/").concat(reqData.track_id);
+                        url = "".concat(this.apiBaseURL).concat(methodInfo.path).concat(reqData.track_id);
                         return [2 /*return*/, this.request("paymentInfo", {}, url)];
                 }
             });
