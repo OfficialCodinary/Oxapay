@@ -136,6 +136,7 @@ class ClientPayout {
         memo: string;
         date: number;
     }>> {
+        await this.initialization;
         const methodInfo = this.methods['payoutInfo'];
         const url = `${this.apiBaseURL}${methodInfo.path}/${reqData.trackId}`;
         return this.request('payoutInfo', reqData, url);

@@ -242,6 +242,7 @@ class ClientPayment {
             date: number;
         }[];
     }>> {
+        await this.initialization;
         const methodInfo = this.methods["paymentInfo"];
         const url = `${this.apiBaseURL}${methodInfo.path}/${reqData.track_id}`;
         return this.request("paymentInfo", {}, url);
